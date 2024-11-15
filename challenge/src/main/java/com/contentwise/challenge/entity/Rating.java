@@ -14,8 +14,8 @@ public class Rating {
     @Id
     private Long movieId;
 
-    private int rating;
-    private double viewPercentage;
+    private Integer rating = null;
+    private Double viewPercentage = null;
 
     public Rating() {
     }

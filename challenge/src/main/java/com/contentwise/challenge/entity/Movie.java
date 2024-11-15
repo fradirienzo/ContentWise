@@ -3,10 +3,11 @@ package com.contentwise.challenge.entity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
-public class Movie {
+public class Movie implements Serializable {
 
     @Id
     Long id;
@@ -28,5 +29,17 @@ public class Movie {
 
     public void setGenres(List<String> genres) {
         this.genres = genres;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public List<String> getGenres() {
+        return genres;
     }
 }

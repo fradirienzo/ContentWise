@@ -14,7 +14,12 @@ public class CsvLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        String filePath = "static/users.csv";
-        csvService.loadCsvData(filePath);
+        String userPath = "static/users.csv";
+        csvService.loadCsvDataUser(userPath);
+        String moviePath = "static/movies.csv";
+        csvService.loadCsvDataMovie(moviePath);
+        String ratingPath = "static/ratings.csv";
+        csvService.loadCsvDataRating(ratingPath);
+
     }
 }
