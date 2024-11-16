@@ -2,11 +2,13 @@ package com.contentwise.challenge.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 import java.io.Serializable;
 import java.util.List;
 
 @Entity
+@Table(name = "movie")
 public class Movie implements Serializable {
 
     @Id
@@ -16,7 +18,17 @@ public class Movie implements Serializable {
 
     List<String> genres;
 
+    Double avgRating;
+
     public Movie() {
+    }
+
+    public Double getAvgRating() {
+        return avgRating;
+    }
+
+    public void setAvgRating(Double avgRating) {
+        this.avgRating = avgRating;
     }
 
     public void setId(Long id) {

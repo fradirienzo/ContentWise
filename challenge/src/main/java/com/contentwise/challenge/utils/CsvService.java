@@ -3,9 +3,11 @@ package com.contentwise.challenge.utils;
 import com.contentwise.challenge.entity.Movie;
 import com.contentwise.challenge.entity.Rating;
 import com.contentwise.challenge.entity.User;
+import com.contentwise.challenge.entity.View;
 import com.contentwise.challenge.repository.MovieRepository;
 import com.contentwise.challenge.repository.RatingRepository;
 import com.contentwise.challenge.repository.UserRepository;
+import com.contentwise.challenge.repository.ViewRepository;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
 import lombok.extern.slf4j.Slf4j;
@@ -28,12 +30,14 @@ public class CsvService {
     private final UserRepository userRepository;
     private final MovieRepository movieRepository;
     private final RatingRepository ratingRepository;
+    private final ViewRepository viewRepository;
 
     @Autowired
-    public CsvService(UserRepository userRepository, MovieRepository movieRepository, RatingRepository ratingRepository) {
+    public CsvService(UserRepository userRepository, MovieRepository movieRepository, RatingRepository ratingRepository, ViewRepository viewRepository) {
         this.userRepository = userRepository;
         this.movieRepository=movieRepository;
         this.ratingRepository=ratingRepository;
+        this.viewRepository=viewRepository;
 
     }
 
@@ -89,6 +93,7 @@ public class CsvService {
         try (CSVReader reader = new CSVReader(new InputStreamReader(new ClassPathResource(filePath).getInputStream()))) {
             String[] nextLine;
             List<Rating> ratings = new ArrayList<>();
+            List<View> views = new ArrayList<>();
 
             // Skip the header
             reader.readNext();
@@ -101,10 +106,11 @@ public class CsvService {
                 }
 
                 Rating rating = new Rating();
-
+                View view = new View();
                 // Parse userId
                 if (!nextLine[0].isEmpty()) {
                     rating.setUserId(Long.parseLong(nextLine[0]));
+                    view.setUserId(Long.parseLong(nextLine[0]));
                 } else {
                     log.warn("Missing userId for row: " + Arrays.toString(nextLine));
                     continue; // Skip rows with missing userId
@@ -113,22 +119,40 @@ public class CsvService {
                 // Parse movieId
                 if (!nextLine[1].isEmpty()) {
                     rating.setMovieId(Long.parseLong(nextLine[1]));
+                    view.setMovieId(Long.parseLong(nextLine[1]));
                 } else {
                     log.warn("Missing movieId for row: " + Arrays.toString(nextLine));
                     continue; // Skip rows with missing movieId
                 }
 
                 // Parse rating
-                rating.setRating(nextLine[2].isEmpty() ? null : Integer.parseInt(nextLine[2]));
+                int ratingValue = nextLine[2].isEmpty() ? -1 : Integer.parseInt(nextLine[2]);
 
                 // Parse viewPercentage
-                rating.setViewPercentage(nextLine[3].isEmpty() ? null : Integer.parseInt(nextLine[3]));
+                double viewValue = nextLine[3].isEmpty() ? -1 : Double.parseDouble(nextLine[3]);
+
+                if(ratingValue == -1 && viewValue != -1){
+                    ratingValue = RatingGenerator.generateRating(viewValue);
+                }
+                if(ratingValue == -1 && viewValue == -1){
+                    log.warn("Detected malformed row in ratings.csv !");
+                    continue;//malformed interaction
+                }
+
+                rating.setRating(ratingValue);
 
                 ratings.add(rating);
-            }
 
+                if(viewValue != -1){
+                    view.setPercentage(viewValue);
+                    views.add(view);
+                }
+            }
+            log.info("Parsed ratings: " + ratings.size());
+            log.info("Parsed views: " + views.size());
             // Save all ratings to the repository
             ratingRepository.saveAll(ratings);
+            viewRepository.saveAll(views);
         } catch (IOException e) {
             throw new RuntimeException("Error reading the Rating CSV file", e);
         } catch (CsvValidationException e) {

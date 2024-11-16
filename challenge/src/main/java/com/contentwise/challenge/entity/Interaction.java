@@ -1,15 +1,24 @@
 package com.contentwise.challenge.entity;
 
-import java.io.Serializable;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
+
 import java.util.Objects;
 
-public class RatingId implements Serializable {
+@Entity
+@IdClass(InteractionId.class)
+public class Interaction {
+
+    @Id
     private Long userId;
+
+    @Id
     private Long movieId;
 
-    public RatingId() {}
+    public Interaction() {}
 
-    public RatingId(Long userId, Long movieId) {
+    public Interaction(Long userId, Long movieId) {
         this.userId = userId;
         this.movieId = movieId;
     }
@@ -34,7 +43,7 @@ public class RatingId implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        RatingId that = (RatingId) o;
+        Interaction that = (Interaction) o;
         return Objects.equals(userId, that.userId) &&
                 Objects.equals(movieId, that.movieId);
     }
@@ -43,4 +52,5 @@ public class RatingId implements Serializable {
     public int hashCode() {
         return Objects.hash(userId, movieId);
     }
+
 }
