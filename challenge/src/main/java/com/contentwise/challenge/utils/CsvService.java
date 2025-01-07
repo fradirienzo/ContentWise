@@ -77,6 +77,7 @@ public class CsvService {
                 for(int i = 2; i < nextLine.length; ++i){
                     genres.add(nextLine[i]);
                 }
+                //CORRRREGGO
                 movie.setGenres(genres);
                 movies.add(movie);
             }
@@ -88,6 +89,7 @@ public class CsvService {
         }
     }
 
+    //VERY UGLY FUNCTION....I KNOW
     @Transactional
     public void loadCsvDataRating(String filePath) {
         try (CSVReader reader = new CSVReader(new InputStreamReader(new ClassPathResource(filePath).getInputStream()))) {
@@ -151,7 +153,11 @@ public class CsvService {
             log.info("Parsed ratings: " + ratings.size());
             log.info("Parsed views: " + views.size());
             // Save all ratings to the repository
+            ratings.forEach((v) -> log.info(v.getMovieId() + ""));
+            ratings.forEach((v) -> log.info(v.getUserId() + ""));
             ratingRepository.saveAll(ratings);
+            views.forEach((v) -> log.info(v.getMovieId() + ""));
+            views.forEach((v) -> log.info(v.getUserId() + ""));
             viewRepository.saveAll(views);
         } catch (IOException e) {
             throw new RuntimeException("Error reading the Rating CSV file", e);

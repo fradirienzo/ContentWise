@@ -1,8 +1,12 @@
 package com.contentwise.challenge.entity;
 
+import jakarta.persistence.Embeddable;
+
+import java.io.Serializable;
 import java.util.Objects;
 
-public class InteractionId {
+@Embeddable
+public class InteractionId implements Serializable {
     private Long userId;
     private Long movieId;
 
