@@ -11,11 +11,11 @@ import java.util.List;
 @Repository
 public interface MovieRepository extends JpaRepository<Movie, Long> {
 
-    @Query(value = "SELECT * FROM movie m " +
-            "WHERE (:genre IS NULL OR :genre MEMBER OF m.genres) " +
-            "AND (:maxRating IS NULL OR m.avg_rating <= :maxRating) " +
-            "AND (:minRating IS NULL OR m.avg_rating >= :minRating)",
-            nativeQuery = true)
+    @Query("SELECT m FROM Movie m " +
+            "JOIN m.genres g " +
+            "WHERE (:genre IS NULL OR g.name = :genre) " +
+            "AND (:maxRating IS NULL OR m.avgRating <= :maxRating) " +
+            "AND (:minRating IS NULL OR m.avgRating >= :minRating)")
     public List<Movie> getMoviesWithParams(@Param("genre") String genre,
                                            @Param("maxRating") Double maxRating,
                                            @Param("minRating") Double minRating);

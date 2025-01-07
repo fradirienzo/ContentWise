@@ -3,44 +3,48 @@ package com.contentwise.challenge.entity;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 @Entity
 public class Genre implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
 
+    @Id
     private String name;
 
     @ManyToMany(mappedBy = "genres")
-    private List<Movie> movies;
+    private Set<Movie> movies;
 
     public Genre() {
     }
 
-    public int getId() {
-        return id;
-    }
 
     public String getName() {
         return name;
     }
 
-    public List<Movie> getMovies() {
+    public Set<Movie> getMovies() {
         return movies;
     }
 
-    public void setMovies(List<Movie> movies) {
+    public void setMovies(Set<Movie> movies) {
         this.movies = movies;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Genre genre = (Genre) o;
+        return Objects.equals(name, genre.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(name);
     }
 }

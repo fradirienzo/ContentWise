@@ -3,10 +3,9 @@ package com.contentwise.challenge.entity;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Set;
 
 @Entity
-@Table(name = "movie")
 public class Movie implements Serializable {
 
     @Id
@@ -20,7 +19,7 @@ public class Movie implements Serializable {
             joinColumns = @JoinColumn(name = "movie_id"), // Colonna che collega a Movie
             inverseJoinColumns = @JoinColumn(name = "genre_id") // Colonna che collega a Genre
     )
-    List<Genre> genres;
+    Set<Genre> genres;
 
     Double avgRating;
 
@@ -51,11 +50,11 @@ public class Movie implements Serializable {
         return title;
     }
 
-    public List<Genre> getGenres() {
+    public Set<Genre> getGenres() {
         return genres;
     }
 
-    public void setGenres(List<Genre> genres) {
+    public void setGenres(Set<Genre> genres) {
         this.genres = genres;
     }
 }

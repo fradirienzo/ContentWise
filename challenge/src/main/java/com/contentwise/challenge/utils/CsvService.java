@@ -1,13 +1,7 @@
 package com.contentwise.challenge.utils;
 
-import com.contentwise.challenge.entity.Movie;
-import com.contentwise.challenge.entity.Rating;
-import com.contentwise.challenge.entity.User;
-import com.contentwise.challenge.entity.View;
-import com.contentwise.challenge.repository.MovieRepository;
-import com.contentwise.challenge.repository.RatingRepository;
-import com.contentwise.challenge.repository.UserRepository;
-import com.contentwise.challenge.repository.ViewRepository;
+import com.contentwise.challenge.entity.*;
+import com.contentwise.challenge.repository.*;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
 import lombok.extern.slf4j.Slf4j;
@@ -18,9 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 
 @Service
@@ -31,14 +23,15 @@ public class CsvService {
     private final MovieRepository movieRepository;
     private final RatingRepository ratingRepository;
     private final ViewRepository viewRepository;
+    private final GenreRepository genreRepository;
 
     @Autowired
-    public CsvService(UserRepository userRepository, MovieRepository movieRepository, RatingRepository ratingRepository, ViewRepository viewRepository) {
+    public CsvService(UserRepository userRepository, MovieRepository movieRepository, RatingRepository ratingRepository, ViewRepository viewRepository, GenreRepository genreRepository) {
         this.userRepository = userRepository;
         this.movieRepository=movieRepository;
         this.ratingRepository=ratingRepository;
         this.viewRepository=viewRepository;
-
+        this.genreRepository=genreRepository;
     }
 
 
@@ -57,9 +50,9 @@ public class CsvService {
             }
             userRepository.saveAll(users);
         } catch (IOException e) {
-            throw new RuntimeException("Error reading the CSV file", e);
+            throw new RuntimeException("Error reading the User CSV file", e);
         } catch (CsvValidationException e) {
-            throw new RuntimeException("Error validating the CSV file", e);
+            throw new RuntimeException("Error validating the User CSV file", e);
         }
     }
 
@@ -69,15 +62,26 @@ public class CsvService {
             String[] nextLine;
             List<Movie> movies = new ArrayList<>();
             reader.readNext();
+            Set<String> parsedGenres = new HashSet<>();
             while ((nextLine = reader.readNext()) != null) {
                 Movie movie = new Movie();
                 movie.setId(Long.parseLong(nextLine[0]));
                 movie.setTitle(nextLine[1]);
-                List<String> genres = new ArrayList<>();
-                for(int i = 2; i < nextLine.length; ++i){
-                    genres.add(nextLine[i]);
+                log.info("parsing genres");
+                Set<Genre> genres = new HashSet<>();
+                String[] parts = nextLine[2].split("\\|");
+                for(int i = 0; i < parts.length; ++i){
+                    if(!parsedGenres.contains(parts[i])){
+                        Genre g = new Genre();
+                        g.setName(parts[i]);
+                        genreRepository.save(g);
+                        parsedGenres.add(g.getName());
+                        genres.add(g);
+                    } else {
+                        Genre g = genreRepository.findByName(parts[i]);
+                        genres.add(g);
+                    }
                 }
-                //CORRRREGGO
                 movie.setGenres(genres);
                 movies.add(movie);
             }
