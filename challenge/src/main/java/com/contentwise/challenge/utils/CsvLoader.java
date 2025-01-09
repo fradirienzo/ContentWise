@@ -20,6 +20,5 @@ public class CsvLoader implements CommandLineRunner {
         csvService.loadCsvDataMovie(moviePath);
         String ratingPath = "static/ratings.csv";
         csvService.loadCsvDataRating(ratingPath);
-
     }
 }

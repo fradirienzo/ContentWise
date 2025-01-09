@@ -89,6 +89,11 @@ public class CsvService {
                 movies.add(movie);
             }
             movieRepository.saveAll(movies);
+
+            List<Movie> movs = movieRepository.findAll();
+            List<Genre> genres = genreRepository.findAll();
+            movs.forEach((m) -> {System.out.println(m.getTitle()); m.getGenres().forEach((g)->{System.out.println(g.getName());});});
+            genres.forEach((g) -> {System.out.println(g.getName());});
         } catch (IOException e) {
             throw new RuntimeException("Error reading the Movie CSV file", e);
         } catch (CsvValidationException e) {

@@ -35,6 +35,7 @@ public class MovieService {
 
     public List<Movie> getMoviesWithParams(String genre, Double maxRating, Double minRating){
         log.info("calling the repository for retrieving movies by params");
-        return movieRepository.getMoviesWithParams(genre,maxRating, minRating);
+        List<Movie> movies = movieRepository.getMoviesWithParams(genre,maxRating, minRating);
+        return movies;
     }
 }
