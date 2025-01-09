@@ -67,7 +67,7 @@ public class CsvService {
                 Movie movie = new Movie();
                 movie.setId(Long.parseLong(nextLine[0]));
                 movie.setTitle(nextLine[1]);
-                log.info("parsing genres");
+                log.info("parsing " + movie.getTitle() + " !");
                 Set<Genre> genres = new HashSet<>();
                 String[] parts = nextLine[2].split("\\|");
                 for(int i = 0; i < parts.length; ++i){
@@ -77,9 +77,12 @@ public class CsvService {
                         genreRepository.save(g);
                         parsedGenres.add(g.getName());
                         genres.add(g);
+                        log.info("genre " + g.getName() + " for " + movie.getTitle());
                     } else {
                         Genre g = genreRepository.findByName(parts[i]);
                         genres.add(g);
+                        log.info("genre " + g.getName() + " for " + movie.getTitle());
+
                     }
                 }
                 movie.setGenres(genres);
