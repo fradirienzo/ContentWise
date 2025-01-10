@@ -1,5 +1,6 @@
 package com.contentwise.challenge.controller;
 
+import com.contentwise.challenge.entity.Interaction;
 import com.contentwise.challenge.entity.Movie;
 import com.contentwise.challenge.service.MovieService;
 import lombok.extern.slf4j.Slf4j;
@@ -36,5 +37,7 @@ public class MovieController {
         log.info("retrieving movies according to the parameters genre " + genre + " maxRating " + maxRating + " minRating " + minRating);
         return movieService.getMoviesWithParams(genre, maxRating, minRating);
     }
+
+
 
 }
