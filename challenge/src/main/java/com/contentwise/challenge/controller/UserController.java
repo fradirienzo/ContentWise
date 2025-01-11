@@ -5,10 +5,7 @@ import com.contentwise.challenge.entity.User;
 import com.contentwise.challenge.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -33,5 +30,11 @@ public class UserController {
     @GetMapping("/userHistory")
     public List<Interaction> retriveInteractions(@RequestParam(required = true) int ratings, @RequestParam(required = true) int userId){
         return userService.getInteractions(ratings, userId);
+    }
+
+    @PostMapping("/addInteractions")
+    public void addInteraction(@RequestBody(required = true) Interaction interaction){
+        log.info("Adding interaction");
+        userService.addInteraction(interaction);
     }
 }

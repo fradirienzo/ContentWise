@@ -1,7 +1,9 @@
 package com.contentwise.challenge.service;
 
 import com.contentwise.challenge.entity.Interaction;
+import com.contentwise.challenge.entity.Rating;
 import com.contentwise.challenge.entity.User;
+import com.contentwise.challenge.entity.View;
 import com.contentwise.challenge.repository.RatingRepository;
 import com.contentwise.challenge.repository.UserRepository;
 import com.contentwise.challenge.repository.ViewRepository;
@@ -43,5 +45,13 @@ public class UserService {
             res.addAll(viewRepository.retrieveViews(userId));
         }
         return res;
+    }
+
+    public void addInteraction(Interaction interaction){
+        if(interaction instanceof Rating){
+            ratingRepository.save((Rating) interaction);
+        } else if( interaction instanceof View){
+            viewRepository.save((View) interaction);
+        }
     }
 }
