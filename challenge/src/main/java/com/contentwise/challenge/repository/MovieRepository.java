@@ -20,6 +20,6 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
                                            @Param("maxRating") Double maxRating,
                                            @Param("minRating") Double minRating);
 
-    @Query("SELECT m FROM Movie m")
-    public List<Movie> likedMovies(@Param("user_id") int user_id);
+    @Query("SELECT m FROM Movie m JOIN m.genres g WHERE g.name = :genre")
+    public List<Movie> suggestedMovies(@Param("genre") String genre);
 }
