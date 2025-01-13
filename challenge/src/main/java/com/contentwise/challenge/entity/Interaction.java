@@ -1,8 +1,19 @@
 package com.contentwise.challenge.entity;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import jakarta.persistence.*;
 import java.util.Objects;
 
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME, // Use a type name to identify the subclass
+        include = JsonTypeInfo.As.PROPERTY, // Include type information as a property in JSON
+        property = "type" // JSON field to determine the type
+)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = Rating.class, name = "rating"),
+        @JsonSubTypes.Type(value = View.class, name = "view")
+})
 
 @MappedSuperclass
 public class Interaction {

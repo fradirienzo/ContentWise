@@ -5,6 +5,7 @@ import com.contentwise.challenge.entity.User;
 import com.contentwise.challenge.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,8 +34,9 @@ public class UserController {
     }
 
     @PostMapping("/addInteractions")
-    public void addInteraction(@RequestBody(required = true) Interaction interaction){
+    public void addInteraction(@Validated @RequestBody(required = true) Interaction interaction){
         log.info("Adding interaction");
         userService.addInteraction(interaction);
+        log.info("Interaction added");
     }
 }

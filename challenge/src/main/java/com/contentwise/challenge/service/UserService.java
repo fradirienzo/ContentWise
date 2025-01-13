@@ -49,9 +49,13 @@ public class UserService {
 
     public void addInteraction(Interaction interaction){
         if(interaction instanceof Rating){
+            log.info("Rating injested !");
             ratingRepository.save((Rating) interaction);
         } else if( interaction instanceof View){
+            log.info("View injested !");
             viewRepository.save((View) interaction);
+        } else {
+            log.info("Errore");
         }
     }
 }
