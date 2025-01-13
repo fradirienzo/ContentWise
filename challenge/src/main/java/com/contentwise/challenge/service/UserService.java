@@ -1,9 +1,6 @@
 package com.contentwise.challenge.service;
 
-import com.contentwise.challenge.entity.Interaction;
-import com.contentwise.challenge.entity.Rating;
-import com.contentwise.challenge.entity.User;
-import com.contentwise.challenge.entity.View;
+import com.contentwise.challenge.entity.*;
 import com.contentwise.challenge.repository.RatingRepository;
 import com.contentwise.challenge.repository.UserRepository;
 import com.contentwise.challenge.repository.ViewRepository;
@@ -57,5 +54,13 @@ public class UserService {
         } else {
             log.info("Errore");
         }
+    }
+
+    public List<Movie> computeRecommendations(User u){
+        //extracting liked movies
+        log.info("Extracting liked movies ids");
+        List<Long> likedMoviesIds = ratingRepository.getLikedMoviesIds(u.getId());
+        //now extracting liked genres
+        log.info("Extracting liked genres");
     }
 }

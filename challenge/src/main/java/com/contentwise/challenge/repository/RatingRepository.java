@@ -18,4 +18,7 @@ public interface RatingRepository extends JpaRepository<Rating, InteractionId> {
     @Query("SELECT r FROM Rating r WHERE r.interactionId.userId = :userId")
     public List<Rating> retrieveUserRatings(@Param("userId") int userId);
 
+    @Query("SELECT FROM Rating r WHERE r.interactionId.userId =:userId AND r.rating >= 4")
+    public List<Long> getLikedMoviesIds(@Param("userId") Long userId);
+
 }

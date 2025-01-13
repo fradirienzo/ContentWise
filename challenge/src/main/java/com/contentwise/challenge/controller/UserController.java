@@ -1,6 +1,7 @@
 package com.contentwise.challenge.controller;
 
 import com.contentwise.challenge.entity.Interaction;
+import com.contentwise.challenge.entity.Movie;
 import com.contentwise.challenge.entity.User;
 import com.contentwise.challenge.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -38,5 +39,11 @@ public class UserController {
         log.info("Adding interaction");
         userService.addInteraction(interaction);
         log.info("Interaction added");
+    }
+
+    @GetMapping("/getRecommendations")
+    public List<Movie> getRecommendations(@Validated @RequestBody(required = true) User u){
+        log.info("Recommendation start");
+
     }
 }
