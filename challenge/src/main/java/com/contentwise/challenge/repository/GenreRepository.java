@@ -13,6 +13,6 @@ public interface GenreRepository extends JpaRepository<Genre, String> {
 
     public Genre findByName(String name);
 
-    @Query("SELECT g.name FROM Movie m JOIN m.genres g WHERE M.movieId = :movieId ")
+    @Query("SELECT g FROM Movie m JOIN m.genres g WHERE m.id = :movieId")
     public Set<Genre> likedGenresForMovie(@Param("movieId") Long movieId);
 }

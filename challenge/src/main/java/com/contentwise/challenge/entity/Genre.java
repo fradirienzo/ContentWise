@@ -1,5 +1,6 @@
 package com.contentwise.challenge.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -14,6 +15,7 @@ public class Genre implements Serializable {
     private String name;
 
     @ManyToMany(mappedBy = "genres")
+    @JsonIgnore
     private Set<Movie> movies;
 
     public Genre() {

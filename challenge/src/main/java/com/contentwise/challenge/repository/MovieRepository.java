@@ -1,5 +1,6 @@
 package com.contentwise.challenge.repository;
 
+import com.contentwise.challenge.entity.Genre;
 import com.contentwise.challenge.entity.Movie;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -7,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public interface MovieRepository extends JpaRepository<Movie, Long> {
@@ -20,6 +22,6 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
                                            @Param("maxRating") Double maxRating,
                                            @Param("minRating") Double minRating);
 
-    @Query("SELECT m FROM Movie m JOIN m.genres g WHERE g.name = :genre")
-    public List<Movie> suggestedMovies(@Param("genre") String genre);
+    @Query("SELECT m FROM Movie m JOIN m.genres g WHERE g IN :genres AND m.id NOT IN :movies")
+    public List<Movie> suggestedMovies(@Param("genres") Set<Genre> genres, @Param("movies") Set<Long> movies);
 }

@@ -19,13 +19,15 @@ public class UserService {
     private RatingRepository ratingRepository;
     private ViewRepository viewRepository;
     private GenreRepository genreRepository;
+    private MovieRepository movieRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository, RatingRepository ratingRepository, ViewRepository viewRepository, GenreRepository genreRepository){
+    public UserService(UserRepository userRepository, RatingRepository ratingRepository, ViewRepository viewRepository, GenreRepository genreRepository, MovieRepository movieRepository){
         this.userRepository = userRepository;
         this.ratingRepository = ratingRepository;
         this.viewRepository = viewRepository;
         this.genreRepository = genreRepository;
+        this.movieRepository = movieRepository;
     }
 
     public List<User> getAllUsers(){
@@ -61,16 +63,17 @@ public class UserService {
     public List<Movie> computeRecommendations(User u){
         //extracting liked movies
         log.info("Extracting liked movies ids");
-        List<Movie> res = new ArrayList<>();
-        List<Long> likedMoviesIds = ratingRepository.getLikedMoviesIds(u.getId());
+        Set<Long> likedMoviesIds = ratingRepository.getLikedMoviesIds(u.getId());
         //now extracting liked genres
         log.info("Extracting liked genres");
         Set<Genre> likedGenres = new HashSet<>();
         for (Long likedMoviesId : likedMoviesIds) {
             likedGenres.addAll(genreRepository.likedGenresForMovie(likedMoviesId));
         }
-        log.info("Extracting movies not seen with same genres");
+        log.info("Extracting all movies with same genres");
 
-        return res;
+        List<Movie> candidates = movieRepository.suggestedMovies(likedGenres, likedMoviesIds);
+
+        return candidates;
     }
 }

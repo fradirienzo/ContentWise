@@ -43,7 +43,7 @@ public class UserController {
 
     @GetMapping("/getRecommendations")
     public List<Movie> getRecommendations(@Validated @RequestBody(required = true) User u){
-        log.info("Recommendation start");
-
+        log.info("Recommendation start for userId {} username {}", u.getId(), u.getUsername());
+        return userService.computeRecommendations(u);
     }
 }
