@@ -24,4 +24,13 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
 
     @Query("SELECT m FROM Movie m JOIN m.genres g WHERE g IN :genres AND m.id NOT IN :movies")
     public List<Movie> suggestedMovies(@Param("genres") Set<Genre> genres, @Param("movies") Set<Long> movies);
+
+    @Query("SELECT m FROM Movie m WHERE :title IS NULL OR m.title = :title")
+    public List<Movie> selectMovieByTitle(@Param("title") String title);
+
+    @Query("SELECT m FROM Movie m WHERE :words IS NULL OR LOWER(m.title) LIKE LOWER(CONCAT('%', :words, '%'))")
+    public List<Movie> getMoviesByWord(@Param("words") String words);
+
+    @Query("SELECT m FROM Movie m JOIN m.genres g WHERE :genres IS NULL OR g.name in :genres")
+    public List<Movie> getMoviesByGenre(@Param("genres") List<String> genres);
 }

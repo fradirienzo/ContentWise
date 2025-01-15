@@ -10,7 +10,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
+import static java.util.Collections.emptyList;
 
 @RestController
 @RequestMapping("/movie")
@@ -38,6 +42,11 @@ public class MovieController {
         return movieService.getMoviesWithParams(genre, maxRating, minRating);
     }
 
-
+    @GetMapping("/getMoviesWeak")
+    public List<Movie> getMoviesWeakParam(@RequestParam(required = false) String title,@RequestParam(required = false) Optional<ArrayList<String>> genreNames){
+        log.info("title {}",title);
+        genreNames.ifPresent(strings -> strings.forEach((g) -> log.info("Genre {}", g)));
+        return movieService.getMoviesByTitleAndGenres(title, genreNames.orElseGet(ArrayList::new));
+    }
 
 }
